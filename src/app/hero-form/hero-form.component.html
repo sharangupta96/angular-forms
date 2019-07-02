@@ -1,30 +1,36 @@
 {{diagnostic}}
 <div class="container">
     <h1>Hero Form</h1>
-    <form #heroForm="ngForm">
+    <form (ngSubmit)="onSubmit()" #heroForm="ngForm">
         <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" required
-            [(ngModel)]="model.name" name="name" #spy>TODO: remove this: {{model.name}}
+            <input type="text" class="form-control" required [(ngModel)]="model.name" name="name" #name="ngModel" #spy>
+            <!--linking template reference variable to ngModel directive-->
+            <div [hidden]="name.valid || name.pristine" class="alert alert-danger">Name is required</div>
+            TODO: remove this: {{model.name}}<br>
             TODO: remove this: {{spy.className}}
-            <div [hidden]="name.valid || name.pristine"
-     class="alert alert-danger">Name is Required</div>
         </div>
-
+        
         <div class="form-group">
             <label for="alterEgo">Alter Ego</label>
-            <input type="text" class="form-control" id="alterEgo"
-            [(ngModel)]="model.alterEgo" name="alterEgo">
+            <input type="text" class="form-control" id="alterEgo" [(ngModel)]="model.alterEgo" name="alterEgo">
         </div>
 
         <div class="form-group">
             <label for="power">Hero Power</label>
-            <select id="power" class="form-control" required
-            [(ngModel)]="model.power" name="power">
+            <select id="power" class="form-control" required [(ngModel)]="model.power" name="power" #power="ngModel">
                 <option [value]="pow" *ngFor="let pow of powers">{{pow}}</option>
             </select>
+            <div [hidden]="power.valid" class="alert alert-danger">Power is required</div>
         </div>
 
-        <button type="submit" class="btn btn-success">Submit</button>
+        <button type="submit" class="btn btn-success" [disabled]="!heroForm.form.valid">Submit</button>
+        <button type="button" class="btn btn-default" (click)="newHero(); heroForm.reset()">New Hero</button>
     </form>
 </div>
+
+<!--
+    ng-dirty is true if the control's value is changed
+    ng-valid is true if the control's value is valid
+    ng-touched is true if the control has been visited
+-->
